@@ -3,3 +3,20 @@ members = [
     "crates/sigil-core",
 ]
 resolver = "2"
+
+[package]
+name = "sigil"
+version = "0.1.0"
+edition = "2021"
+
+[[bin]]
+name = "sigil"
+path = "src/main.rs"
+
+[dependencies]
+sigil-core = { path = "crates/sigil-core" }
+serdevault  = { path = "../serdevault" }
+ratatui     = "0.29"
+crossterm   = "0.28"
+arboard     = "3"
+uuid        = { version = "1", features = ["v4"] }
