@@ -1,0 +1,36 @@
+name: Auto-tag
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - 'Cargo.toml'
+
+permissions:
+  contents: write
+
+jobs:
+  tag:
+    name: Tag new version
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Read version from Cargo.toml
+        id: ver
+        run: |
+          VERSION=$(grep '^version' Cargo.toml | head -1 | sed 's/.*"\(.*\)".*/\1/')
+          echo "tag=v${VERSION}" >> "$GITHUB_OUTPUT"
+
+      - name: Create and push tag (if new)
+        run: |
+          TAG="${{ steps.ver.outputs.tag }}"
+          if git ls-remote --tags origin "refs/tags/${TAG}" | grep -q .; then
+            echo "Tag ${TAG} already exists — skipping."
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git tag "${TAG}"
+            git push origin "${TAG}"
+            echo "Created and pushed tag ${TAG}."
+          fi
