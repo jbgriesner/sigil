@@ -37,4 +37,4 @@ Vault is created on first launch at `~/.local/share/valt/vault.svlt`.
 
 ## License
 
-See [LICENSE](LICENSE).
+GPL-3.0-or-later — see [LICENSE](LICENSE).

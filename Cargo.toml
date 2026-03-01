@@ -9,7 +9,7 @@ name = "valt"
 version = "0.1.1"
 edition = "2021"
 description = "A keyboard-driven terminal password manager — encrypted, offline, no cloud"
-license = "PolyForm-Noncommercial-1.0.0"
+license = "GPL-3.0-or-later"
 repository = "https://github.com/jbgriesner/valt"
 
 [[bin]]
