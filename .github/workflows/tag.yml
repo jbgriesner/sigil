@@ -23,6 +23,8 @@ jobs:
           echo "tag=v${VERSION}" >> "$GITHUB_OUTPUT"
 
       - name: Create and push tag (if new)
+        env:
+          GH_PAT: ${{ secrets.GH_PAT }}
         run: |
           TAG="${{ steps.ver.outputs.tag }}"
           if git ls-remote --tags origin "refs/tags/${TAG}" | grep -q .; then
@@ -31,6 +33,7 @@ jobs:
             git config user.name "github-actions[bot]"
             git config user.email "github-actions[bot]@users.noreply.github.com"
             git tag "${TAG}"
-            git push origin "${TAG}"
+            # Push with PAT so the tag event triggers release.yml
+            git push "https://x-access-token:${GH_PAT}@github.com/${{ github.repository }}.git" "${TAG}"
             echo "Created and pushed tag ${TAG}."
           fi
