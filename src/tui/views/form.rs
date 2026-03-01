@@ -135,7 +135,9 @@ fn render_generator_popup(f: &mut Frame, app: &AppState) {
 
     let (length_label_style, length_val_style) = if popup.focused == 0 {
         (
-            Style::default().fg(Color::Cyan).add_modifier(Modifier::BOLD),
+            Style::default()
+                .fg(Color::Cyan)
+                .add_modifier(Modifier::BOLD),
             Style::default().fg(Color::White).bg(Color::DarkGray),
         )
     } else {
@@ -215,9 +217,6 @@ fn toggle_spans(label: &str, checked: bool, focused: bool) -> Vec<Span<'static>>
     };
     vec![
         Span::styled(checkbox, checkbox_style),
-        Span::styled(
-            format!(" {label}"),
-            Style::default().fg(Color::White),
-        ),
+        Span::styled(format!(" {label}"), Style::default().fg(Color::White)),
     ]
 }

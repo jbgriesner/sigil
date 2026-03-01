@@ -88,8 +88,7 @@ impl GeneratorDraft {
     }
 
     pub fn regenerate(&mut self) {
-        self.preview = generate(&self.to_config())
-            .unwrap_or_else(|_| "(invalid)".to_string());
+        self.preview = generate(&self.to_config()).unwrap_or_else(|_| "(invalid)".to_string());
     }
 }
 
