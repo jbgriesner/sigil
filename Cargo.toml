@@ -23,3 +23,19 @@ ratatui     = "0.29"
 crossterm   = "0.28"
 arboard     = "3"
 uuid        = { version = "1", features = ["v4"] }
+
+[package.metadata.deb]
+maintainer = "jbgriesner <https://github.com/jbgriesner>"
+copyright = "2026 jbgriesner"
+license-file = ["LICENSE", "0"]
+extended-description = """\
+Valt is a keyboard-driven terminal password manager. \
+All secrets are stored in a single AES-256-GCM encrypted file on disk. \
+No cloud, no network, no telemetry."""
+depends = "$auto"
+section = "utils"
+priority = "optional"
+assets = [
+    ["target/release/valt", "usr/bin/", "755"],
+    ["README.md", "usr/share/doc/valt/README.md", "644"],
+]
