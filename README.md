@@ -11,11 +11,52 @@ A terminal password manager that stores everything encrypted on your machine —
 - Clipboard auto-clear after 30 seconds
 - Keyboard-driven TUI (vim-style navigation)
 
-## Usage
+## Installation
 
+### Linux / macOS (one-liner)
+
+```sh
+curl -sSf https://raw.githubusercontent.com/jbgriesner/valt/master/install.sh | sh
 ```
-cargo run --release
+
+To install a specific version or to a custom directory:
+
+```sh
+VALT_VERSION=v0.1.3 VALT_INSTALL_DIR=/usr/local/bin \
+  curl -sSf https://raw.githubusercontent.com/jbgriesner/valt/master/install.sh | sh
 ```
+
+### macOS (Homebrew)
+
+```sh
+brew install jbgriesner/valt/valt
+```
+
+### Arch Linux (AUR)
+
+```sh
+yay -S valt-bin
+```
+
+### Debian / Ubuntu
+
+Download the `.deb` from the [latest release](https://github.com/jbgriesner/valt/releases/latest) and install it:
+
+```sh
+sudo dpkg -i valt_*.deb
+```
+
+### Windows
+
+Download the `.zip` from the [latest release](https://github.com/jbgriesner/valt/releases/latest), extract it, and add the folder to your `PATH`.
+
+### Build from source
+
+```sh
+cargo install --git https://github.com/jbgriesner/valt
+```
+
+## Usage
 
 Vault is created on first launch at `~/.local/share/valt/vault.svlt`.
 
