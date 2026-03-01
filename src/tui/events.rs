@@ -2,9 +2,9 @@ use std::time::{Duration, Instant};
 
 use crossterm::event::{KeyCode, KeyEvent, KeyModifiers};
 use serdevault::VaultFile;
-use valt_core::{generate, GeneratorConfig, Secret, VaultManager};
+use valt_core::{Secret, VaultManager};
 
-use super::app::{AppState, AppView, FormMode, SecretDraft};
+use super::app::{AppState, AppView, FormMode, GeneratorDraft, SecretDraft};
 
 const CLIPBOARD_TIMEOUT: Duration = Duration::from_secs(30);
 
@@ -254,6 +254,11 @@ fn handle_detail(app: &mut AppState, key: KeyEvent) {
 const FORM_FIELD_COUNT: usize = 6;
 
 fn handle_form(app: &mut AppState, key: KeyEvent) {
+    if app.generator_popup.is_some() {
+        handle_generator_popup(app, key);
+        return;
+    }
+
     match key.code {
         KeyCode::Esc => {
             let mode = match &app.view {
@@ -286,11 +291,7 @@ fn handle_form(app: &mut AppState, key: KeyEvent) {
         KeyCode::Char('g') => {
             let is_pwd = is_password_field(app);
             if is_pwd {
-                if let Ok(pwd) = generate(&GeneratorConfig::default()) {
-                    if let AppView::Form { draft, .. } = &mut app.view {
-                        draft.password = pwd;
-                    }
-                }
+                app.generator_popup = Some(GeneratorDraft::new());
             } else {
                 type_char(app, 'g');
             }
@@ -318,6 +319,64 @@ fn handle_form(app: &mut AppState, key: KeyEvent) {
             {
                 *error = None;
                 get_field_mut(draft, *focused_field).pop();
+            }
+        }
+        _ => {}
+    }
+}
+
+fn handle_generator_popup(app: &mut AppState, key: KeyEvent) {
+    match key.code {
+        KeyCode::Esc => {
+            app.generator_popup = None;
+        }
+        KeyCode::Enter => {
+            let preview = app.generator_popup.as_ref().map(|p| p.preview.clone());
+            if let Some(pwd) = preview {
+                if let AppView::Form { draft, .. } = &mut app.view {
+                    draft.password = pwd;
+                }
+            }
+            app.generator_popup = None;
+        }
+        KeyCode::Tab => {
+            if let Some(popup) = &mut app.generator_popup {
+                popup.focused = (popup.focused + 1) % 5;
+                popup.regenerate();
+            }
+        }
+        KeyCode::BackTab => {
+            if let Some(popup) = &mut app.generator_popup {
+                popup.focused = (popup.focused + 4) % 5;
+                popup.regenerate();
+            }
+        }
+        KeyCode::Char(' ') => {
+            if let Some(popup) = &mut app.generator_popup {
+                match popup.focused {
+                    1 => popup.uppercase = !popup.uppercase,
+                    2 => popup.lowercase = !popup.lowercase,
+                    3 => popup.digits = !popup.digits,
+                    4 => popup.symbols = !popup.symbols,
+                    _ => {}
+                }
+                popup.regenerate();
+            }
+        }
+        KeyCode::Char(c) if c.is_ascii_digit() => {
+            if let Some(popup) = &mut app.generator_popup {
+                if popup.focused == 0 && popup.length_str.len() < 3 {
+                    popup.length_str.push(c);
+                    popup.regenerate();
+                }
+            }
+        }
+        KeyCode::Backspace => {
+            if let Some(popup) = &mut app.generator_popup {
+                if popup.focused == 0 {
+                    popup.length_str.pop();
+                    popup.regenerate();
+                }
             }
         }
         _ => {}

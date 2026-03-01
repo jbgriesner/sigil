@@ -3,7 +3,7 @@ use std::time::Instant;
 
 use uuid::Uuid;
 
-use valt_core::{Secret, VaultManager};
+use valt_core::{generate, GeneratorConfig, Secret, VaultManager};
 
 /// Fields of a secret being added or edited.
 #[derive(Debug, Clone)]
@@ -51,6 +51,48 @@ impl SecretDraft {
     }
 }
 
+/// State for the generator popup overlay.
+pub struct GeneratorDraft {
+    pub length_str: String,
+    pub uppercase: bool,
+    pub lowercase: bool,
+    pub digits: bool,
+    pub symbols: bool,
+    pub focused: usize,
+    pub preview: String,
+}
+
+impl GeneratorDraft {
+    pub fn new() -> Self {
+        let mut draft = Self {
+            length_str: "20".to_string(),
+            uppercase: true,
+            lowercase: true,
+            digits: true,
+            symbols: true,
+            focused: 0,
+            preview: String::new(),
+        };
+        draft.regenerate();
+        draft
+    }
+
+    pub fn to_config(&self) -> GeneratorConfig {
+        GeneratorConfig {
+            length: self.length_str.parse::<usize>().unwrap_or(20).max(1),
+            uppercase: self.uppercase,
+            lowercase: self.lowercase,
+            digits: self.digits,
+            symbols: self.symbols,
+        }
+    }
+
+    pub fn regenerate(&mut self) {
+        self.preview = generate(&self.to_config())
+            .unwrap_or_else(|_| "(invalid)".to_string());
+    }
+}
+
 #[derive(Debug, Clone, PartialEq)]
 pub enum FormMode {
     Add,
@@ -90,6 +132,8 @@ pub struct AppState {
     pub should_quit: bool,
     /// Transient status message shown in the list status bar.
     pub status: Option<String>,
+    /// When Some, the generator popup is active over the form.
+    pub generator_popup: Option<GeneratorDraft>,
 }
 
 impl AppState {
@@ -104,6 +148,7 @@ impl AppState {
             clipboard_clear_at: None,
             should_quit: false,
             status: None,
+            generator_popup: None,
         }
     }
 
