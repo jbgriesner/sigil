@@ -1123,6 +1123,8 @@ dependencies = [
 [[package]]
 name = "serdevault"
 version = "0.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "14df84f4cf5181ff76c889c0e2056302253d94633553f06bd57ee7cce296c90b"
 dependencies = [
  "aes-gcm",
  "argon2",

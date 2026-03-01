@@ -14,8 +14,8 @@ name = "sigil"
 path = "src/main.rs"
 
 [dependencies]
-sigil-core = { path = "crates/sigil-core" }
-serdevault  = { path = "../serdevault" }
+sigil-core = { path = "crates/sigil-core", version = "0.1.0" }
+serdevault  = "0.2"
 ratatui     = "0.29"
 crossterm   = "0.28"
 arboard     = "3"
