@@ -3,7 +3,7 @@ use std::time::Instant;
 
 use uuid::Uuid;
 
-use sigil_core::{Secret, VaultManager};
+use valt_core::{Secret, VaultManager};
 
 /// Fields of a secret being added or edited.
 #[derive(Debug, Clone)]

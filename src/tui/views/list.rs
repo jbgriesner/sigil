@@ -36,7 +36,7 @@ pub fn render(f: &mut Frame, app: &AppState) {
     let search_block = Block::default()
         .borders(Borders::ALL)
         .border_style(Style::default().fg(Color::DarkGray))
-        .title(format!(" SIGIL ── {total} secret{} ", if total == 1 { "" } else { "s" }));
+        .title(format!(" VALT ── {total} secret{} ", if total == 1 { "" } else { "s" }));
 
     let (search_text, search_style) = if search_query.is_empty() {
         (

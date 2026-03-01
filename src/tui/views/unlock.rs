@@ -48,7 +48,7 @@ pub fn render(f: &mut Frame, app: &AppState) {
     let mut lines = vec![
         Line::from(""),
         Line::from(Span::styled(
-            "  SIGIL",
+            "  VALT",
             Style::default().fg(Color::Cyan).add_modifier(Modifier::BOLD),
         )),
         Line::from(Span::styled(
@@ -83,7 +83,7 @@ pub fn render(f: &mut Frame, app: &AppState) {
     let block = Block::default()
         .borders(Borders::ALL)
         .border_style(Style::default().fg(Color::Cyan))
-        .title(" Sigil ");
+        .title(" Valt ");
 
     f.render_widget(Paragraph::new(lines).block(block), dialog);
 }

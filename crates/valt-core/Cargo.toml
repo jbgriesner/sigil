@@ -1,7 +1,10 @@
 [package]
-name = "sigil-core"
+name = "valt-core"
 version = "0.1.0"
 edition = "2021"
+description = "Core library for valt — secret management, vault I/O and password generation"
+license = "PolyForm-Noncommercial-1.0.0"
+repository = "https://github.com/jbgriesner/valt"
 
 [dependencies]
 serdevault    = "0.2"

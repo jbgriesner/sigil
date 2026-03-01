@@ -1,4 +1,4 @@
-# Sigil
+# Valt
 
 A terminal password manager that stores everything encrypted on your machine — no cloud, no network, no telemetry.
 
@@ -17,7 +17,7 @@ A terminal password manager that stores everything encrypted on your machine —
 cargo run --release
 ```
 
-Vault is created on first launch at `~/.local/share/sigil/vault.svlt`.
+Vault is created on first launch at `~/.local/share/valt/vault.svlt`.
 
 ## Keybindings
 

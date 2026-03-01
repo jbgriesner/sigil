@@ -1,20 +1,23 @@
 [workspace]
 members = [
-    "crates/sigil-core",
+    "crates/valt-core",
 ]
 resolver = "2"
 
 [package]
-name = "sigil"
+name = "valt"
 version = "0.1.0"
 edition = "2021"
+description = "A keyboard-driven terminal password manager — encrypted, offline, no cloud"
+license = "PolyForm-Noncommercial-1.0.0"
+repository = "https://github.com/jbgriesner/valt"
 
 [[bin]]
-name = "sigil"
+name = "valt"
 path = "src/main.rs"
 
 [dependencies]
-sigil-core = { path = "crates/sigil-core", version = "0.1.0" }
+valt-core = { path = "crates/valt-core", version = "0.1.0" }
 serdevault  = "0.2"
 ratatui     = "0.29"
 crossterm   = "0.28"
