@@ -7,9 +7,10 @@ A terminal password manager that stores everything encrypted on your machine —
 - All secrets stored in a single encrypted file on disk
 - AES-256-GCM encryption with Argon2id key derivation (via [serdevault](https://github.com/jbgriesner/serdevault))
 - Fuzzy search across names, URLs, usernames and tags
-- Built-in password generator
+- Built-in password generator with interactive popup
 - Clipboard auto-clear after 30 seconds
 - Keyboard-driven TUI (vim-style navigation)
+- Non-interactive CLI for scripting and shell integration
 
 ## Installation
 
@@ -58,7 +59,50 @@ cargo install --git https://github.com/jbgriesner/valt
 
 ## Usage
 
-Vault is created on first launch at `~/.local/share/valt/vault.svlt`.
+The vault is stored at `~/.local/share/valt/vault.svlt` and created on first use.
+
+### TUI
+
+Launch the interactive interface:
+
+```sh
+valt
+```
+
+### CLI
+
+All CLI commands prompt for the vault password interactively (no echo).
+
+```sh
+# List all secrets
+valt list
+
+# Filter with a fuzzy query
+valt list github
+
+# Print the password of the best match to stdout
+valt get github
+
+# Scriptable — only the password reaches stdout
+export TOKEN=$(valt get myapi)
+
+# Add a secret (prompts for password + confirmation)
+valt add "GitHub perso" --username jb@example.com --url github.com
+
+# Add a secret with a generated password
+valt add "AWS root" -u admin@company.com -g
+
+# Add a secret with tags
+valt add "Server SSH" -u root --tags "linux,ops"
+
+# Delete a secret (asks for confirmation)
+valt rm github
+
+# Delete without confirmation
+valt rm github -y
+```
+
+Use `valt <command> --help` for details on any command.
 
 ## Keybindings
 

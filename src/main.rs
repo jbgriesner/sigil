@@ -1,10 +1,20 @@
+mod cli;
 mod tui;
 
 use std::path::PathBuf;
 
+use clap::Parser;
+
 fn main() {
+    let args = cli::Cli::parse();
     let vault_path = default_vault_path();
-    if let Err(e) = tui::run(vault_path) {
+
+    let result = match args.command {
+        None => tui::run(vault_path),
+        Some(cmd) => cli::run_command(cmd, &vault_path),
+    };
+
+    if let Err(e) = result {
         eprintln!("Error: {e}");
         std::process::exit(1);
     }
