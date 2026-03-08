@@ -3,7 +3,7 @@ use std::path::PathBuf;
 
 use clap::{Parser, Subcommand};
 use serdevault::VaultFile;
-use valt_core::{generate, GeneratorConfig, Secret, VaultManager};
+use crate::core::{generate, GeneratorConfig, Secret, VaultManager};
 
 #[derive(Parser)]
 #[command(

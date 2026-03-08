@@ -1,4 +1,5 @@
 mod cli;
+mod core;
 mod tui;
 
 use std::path::PathBuf;

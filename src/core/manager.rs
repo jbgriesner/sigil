@@ -4,7 +4,7 @@ use fuzzy_matcher::{skim::SkimMatcherV2, FuzzyMatcher};
 use serdevault::VaultFile;
 use uuid::Uuid;
 
-use crate::{error::CoreError, secret::Secret, vault_data::VaultData};
+use super::{error::CoreError, secret::Secret, vault_data::VaultData};
 
 /// High-level interface to the encrypted vault.
 pub struct VaultManager {
@@ -50,17 +50,6 @@ impl VaultManager {
 
     /// Enable automatic backup: before every `save()`, the current vault file
     /// is copied to `<path>.bak`. Call this right after construction.
-    ///
-    /// ```no_run
-    /// # use valt_core::VaultManager;
-    /// # use serdevault::VaultFile;
-    /// # use std::path::PathBuf;
-    /// let path = PathBuf::from("/home/user/.local/share/valt/vault.svlt");
-    /// let vf = VaultFile::open(&path, "password");
-    /// let mgr = VaultManager::open_or_create(vf)
-    ///     .unwrap()
-    ///     .with_backup_path(path);
-    /// ```
     pub fn with_backup_path(mut self, path: PathBuf) -> Self {
         self.path = Some(path);
         self
@@ -150,10 +139,6 @@ impl VaultManager {
         }
         self.vault.save(&self.data).map_err(CoreError::Vault)
     }
-
-    /// Consume the manager, dropping the `VaultFile` (which zeroizes the
-    /// master password) and the decrypted `VaultData`.
-    pub fn lock(self) {}
 
     /// Compute the best fuzzy match score for a secret against a query string.
     /// Returns `None` if the secret does not match at all.
@@ -397,11 +382,4 @@ mod tests {
         assert!(matches!(result, Err(CoreError::Vault(_))));
     }
 
-    // 16. lock() consumes the manager without panic
-    #[test]
-    fn test_lock() {
-        let dir = tempdir().unwrap();
-        let mgr = VaultManager::open_or_create(test_vault(&dir)).unwrap();
-        mgr.lock(); // should not panic, manager is consumed
-    }
 }

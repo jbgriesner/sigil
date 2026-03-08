@@ -2,7 +2,7 @@ use std::time::{Duration, Instant};
 
 use crossterm::event::{KeyCode, KeyEvent, KeyModifiers};
 use serdevault::VaultFile;
-use valt_core::{Secret, VaultManager};
+use crate::core::{Secret, VaultManager};
 
 use super::app::{AppState, AppView, FormMode, GeneratorDraft, SecretDraft};
 

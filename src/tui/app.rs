@@ -3,7 +3,7 @@ use std::time::Instant;
 
 use uuid::Uuid;
 
-use valt_core::{generate, GeneratorConfig, Secret, VaultManager};
+use crate::core::{generate, GeneratorConfig, Secret, VaultManager};
 
 /// Fields of a secret being added or edited.
 #[derive(Debug, Clone)]

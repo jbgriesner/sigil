@@ -1501,22 +1501,13 @@ name = "valt"
 version = "0.2.3"
 dependencies = [
  "arboard",
+ "chrono",
  "clap",
  "crossterm",
- "ratatui",
- "rpassword",
- "serdevault",
- "uuid",
- "valt-core",
-]
-
-[[package]]
-name = "valt-core"
-version = "0.1.0"
-dependencies = [
- "chrono",
  "fuzzy-matcher",
  "rand",
+ "ratatui",
+ "rpassword",
  "serde",
  "serdevault",
  "tempfile",

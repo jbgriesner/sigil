@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use crate::secret::Secret;
+use super::secret::Secret;
 
 /// Root structure serialized inside the encrypted vault file.
 #[derive(Serialize, Deserialize, Debug)]

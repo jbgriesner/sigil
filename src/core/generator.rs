@@ -1,6 +1,6 @@
 use rand::Rng;
 
-use crate::error::CoreError;
+use super::error::CoreError;
 
 const UPPERCASE: &str = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 const LOWERCASE: &str = "abcdefghijklmnopqrstuvwxyz";
