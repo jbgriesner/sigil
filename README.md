@@ -1,5 +1,10 @@
 # Valt
 
+[![CI](https://github.com/jbgriesner/valt/actions/workflows/ci.yml/badge.svg)](https://github.com/jbgriesner/valt/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/jbgriesner/valt)](https://github.com/jbgriesner/valt/releases/latest)
+[![License](https://img.shields.io/badge/license-GPL--3.0--or--later-blue)](LICENSE)
+[![Platform](https://img.shields.io/badge/platform-Linux%20%7C%20macOS%20%7C%20Windows-informational)](https://github.com/jbgriesner/valt/releases/latest)
+
 A terminal password manager that stores everything encrypted on your machine — no cloud, no network, no telemetry.
 
 ## Features
