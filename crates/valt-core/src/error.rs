@@ -14,4 +14,7 @@ pub enum CoreError {
 
     #[error("Password length must be at least 1")]
     InvalidLength,
+
+    #[error("Backup failed: {0}")]
+    Backup(std::io::Error),
 }

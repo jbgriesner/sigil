@@ -1,3 +1,5 @@
+use std::path::PathBuf;
+
 use fuzzy_matcher::{skim::SkimMatcherV2, FuzzyMatcher};
 use serdevault::VaultFile;
 use uuid::Uuid;
@@ -8,6 +10,8 @@ use crate::{error::CoreError, secret::Secret, vault_data::VaultData};
 pub struct VaultManager {
     vault: VaultFile,
     data: VaultData,
+    /// When set, `save()` copies the current file to `<path>.bak` before each write.
+    path: Option<PathBuf>,
 }
 
 impl VaultManager {
@@ -15,7 +19,7 @@ impl VaultManager {
     /// password is wrong or the file is corrupted.
     pub fn open(vault: VaultFile) -> Result<Self, CoreError> {
         let data = vault.load::<VaultData>()?;
-        Ok(Self { vault, data })
+        Ok(Self { vault, data, path: None })
     }
 
     /// Create a new, empty vault. Writes the initial (empty) `VaultData` to
@@ -23,7 +27,7 @@ impl VaultManager {
     pub fn create(vault: VaultFile) -> Result<Self, CoreError> {
         let data = VaultData::default();
         vault.save(&data)?;
-        Ok(Self { vault, data })
+        Ok(Self { vault, data, path: None })
     }
 
     /// Open the vault if its file exists, or create a new one otherwise.
@@ -34,6 +38,24 @@ impl VaultManager {
         } else {
             Self::create(vault)
         }
+    }
+
+    /// Enable automatic backup: before every `save()`, the current vault file
+    /// is copied to `<path>.bak`. Call this right after construction.
+    ///
+    /// ```no_run
+    /// # use valt_core::VaultManager;
+    /// # use serdevault::VaultFile;
+    /// # use std::path::PathBuf;
+    /// let path = PathBuf::from("/home/user/.local/share/valt/vault.svlt");
+    /// let vf = VaultFile::open(&path, "password");
+    /// let mgr = VaultManager::open_or_create(vf)
+    ///     .unwrap()
+    ///     .with_backup_path(path);
+    /// ```
+    pub fn with_backup_path(mut self, path: PathBuf) -> Self {
+        self.path = Some(path);
+        self
     }
 
     /// All secrets, in insertion order.
@@ -104,7 +126,20 @@ impl VaultManager {
     }
 
     /// Persist the current in-memory state to disk.
+    ///
+    /// If `with_backup_path` was called, copies the existing vault file to
+    /// `<path>.bak` before writing the new version. The backup reflects the
+    /// state just before the current save, so a single rollback is always
+    /// possible. Fails hard if the backup copy itself fails — a copy error
+    /// usually indicates a filesystem problem that would compromise the write
+    /// too.
     pub fn save(&self) -> Result<(), CoreError> {
+        if let Some(ref path) = self.path {
+            if path.exists() {
+                let bak = bak_path(path);
+                std::fs::copy(path, &bak).map_err(CoreError::Backup)?;
+            }
+        }
         self.vault.save(&self.data).map_err(CoreError::Vault)
     }
 
@@ -138,6 +173,18 @@ impl VaultManager {
             (a, b) => Some(a.unwrap_or(0).max(b.unwrap_or(0))),
         }
     }
+}
+
+/// Returns the backup path for a vault file: `<path>.bak`
+/// e.g. `/home/user/.local/share/valt/vault.svlt` → `vault.svlt.bak`
+fn bak_path(path: &PathBuf) -> PathBuf {
+    let mut bak = path.clone();
+    let name = path
+        .file_name()
+        .map(|n| format!("{}.bak", n.to_string_lossy()))
+        .unwrap_or_else(|| "vault.svlt.bak".to_string());
+    bak.set_file_name(name);
+    bak
 }
 
 #[cfg(test)]

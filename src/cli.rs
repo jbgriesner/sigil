@@ -105,14 +105,18 @@ fn open_vault(vault_path: &PathBuf) -> Result<VaultManager, Box<dyn std::error::
     }
     let password = prompt_vault_password()?;
     let vf = VaultFile::open(vault_path, &password);
-    VaultManager::open(vf).map_err(|_| "Wrong password or corrupted vault.".into())
+    VaultManager::open(vf)
+        .map(|m| m.with_backup_path(vault_path.clone()))
+        .map_err(|_| "Wrong password or corrupted vault.".into())
 }
 
 /// Open existing vault or create a new one (used by `add`).
 fn open_or_create_vault(vault_path: &PathBuf) -> Result<VaultManager, Box<dyn std::error::Error>> {
     let password = prompt_vault_password()?;
     let vf = VaultFile::open(vault_path, &password);
-    VaultManager::open_or_create(vf).map_err(|e| format!("Failed to open vault: {e}").into())
+    VaultManager::open_or_create(vf)
+        .map(|m| m.with_backup_path(vault_path.clone()))
+        .map_err(|e| format!("Failed to open vault: {e}").into())
 }
 
 fn cmd_list(vault_path: &PathBuf, query: Option<&str>) -> Result<(), Box<dyn std::error::Error>> {

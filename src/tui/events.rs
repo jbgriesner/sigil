@@ -45,7 +45,7 @@ fn handle_locked(app: &mut AppState, key: KeyEvent) {
             let vault_file = VaultFile::open(&app.vault_path, &password);
             match VaultManager::open_or_create(vault_file) {
                 Ok(manager) => {
-                    app.vault = Some(manager);
+                    app.vault = Some(manager.with_backup_path(app.vault_path.clone()));
                     app.go_to_list();
                 }
                 Err(_) => {
