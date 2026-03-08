@@ -1,4 +1,4 @@
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
 use fuzzy_matcher::{skim::SkimMatcherV2, FuzzyMatcher};
 use serdevault::VaultFile;
@@ -19,7 +19,11 @@ impl VaultManager {
     /// password is wrong or the file is corrupted.
     pub fn open(vault: VaultFile) -> Result<Self, CoreError> {
         let data = vault.load::<VaultData>()?;
-        Ok(Self { vault, data, path: None })
+        Ok(Self {
+            vault,
+            data,
+            path: None,
+        })
     }
 
     /// Create a new, empty vault. Writes the initial (empty) `VaultData` to
@@ -27,7 +31,11 @@ impl VaultManager {
     pub fn create(vault: VaultFile) -> Result<Self, CoreError> {
         let data = VaultData::default();
         vault.save(&data)?;
-        Ok(Self { vault, data, path: None })
+        Ok(Self {
+            vault,
+            data,
+            path: None,
+        })
     }
 
     /// Open the vault if its file exists, or create a new one otherwise.
@@ -177,8 +185,8 @@ impl VaultManager {
 
 /// Returns the backup path for a vault file: `<path>.bak`
 /// e.g. `/home/user/.local/share/valt/vault.svlt` → `vault.svlt.bak`
-fn bak_path(path: &PathBuf) -> PathBuf {
-    let mut bak = path.clone();
+fn bak_path(path: &Path) -> PathBuf {
+    let mut bak = path.to_path_buf();
     let name = path
         .file_name()
         .map(|n| format!("{}.bak", n.to_string_lossy()))
