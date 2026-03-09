@@ -1,6 +1,6 @@
 [package]
 name = "valt"
-version = "0.2.7"
+version = "0.2.8"
 edition = "2021"
 description = "A keyboard-driven terminal password manager — encrypted, offline, no cloud"
 license = "GPL-3.0-or-later"
